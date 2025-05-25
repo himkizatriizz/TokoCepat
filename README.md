@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Tabel Produk dan Pesanan - TokoCepat</title>
+  
   <style>
     table {
       width: 100%;
@@ -26,7 +26,7 @@
 </head>
 <body>
 
-  <table>
+  <table border = '1'>
     <caption>Tabel 1 - Products</caption>
     <thead>
       <tr>

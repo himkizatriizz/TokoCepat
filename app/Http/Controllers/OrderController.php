@@ -7,32 +7,49 @@ use App\Models\Order;
 
 class OrderController extends Controller
 {
-    // Tampilkan semua pesanan
-    public function index()
-    {
-        $orders = Order::all();
-        return view('orders.index', compact('orders'));
+    public function store(Request $request)
+{
+    $request->validate([
+        'shipping_address' => 'required|string|max:255',
+        'phone_number' => 'required|string|max:20',
+        'payment_method' => 'required|string'
+    ]);
+
+    $user = Auth::user();
+    $cartItems = $user->carts()->with('product')->get();
+
+    if($cartItems->isEmpty()) {
+        return redirect()->route('cart.index')->with('error', 'Keranjang belanja kosong');
     }
 
-    // Proses checkout (simpan pesanan)
-    public function processCheckout(Request $request)
-    {
-        $cart = session()->get('cart', []);
+    // Format product details
+    $productDetails = $cartItems->map(function($item) {
+        return [
+            'product_id' => $item->product_id,
+            'name' => $item->product->name,
+            'price' => $item->product->price,
+            'quantity' => $item->quantity,
+            'subtotal' => $item->product->price * $item->quantity
+        ];
+    });
 
-        if (empty($cart)) {
-            return redirect()->back()->with('error', 'Keranjang kosong.');
-        }
+    // Hitung total harga
+    $total = $productDetails->sum('subtotal');
 
-        foreach ($cart as $item) {
-            Order::create([
-                'product_name' => $item['name'],
-                'quantity' => $item['quantity'],
-                'price' => $item['price']
-            ]);
-        }
+    // Buat order
+    $order = Order::create([
+        'user_id' => $user->id,
+        'product_details' => $productDetails,
+        'total_price' => $total,
+        'shipping_address' => $request->shipping_address,
+        'phone_number' => $request->phone_number,
+        'payment_method' => $request->payment_method
+    ]);
 
-        session()->forget('cart');
+    // Kosongkan keranjang
+    $user->carts()->delete();
 
-        return redirect()->route('orders.index')->with('success', 'Checkout berhasil!');
-    }
+    return redirect()->route('orders.show', $order->id)
+           ->with('success', 'Order berhasil dibuat!');
+}
 }

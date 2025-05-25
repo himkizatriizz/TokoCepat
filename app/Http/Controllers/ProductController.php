@@ -4,82 +4,82 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+    // Menampilkan daftar produk
     public function index()
     {
-        $products = Product::all();
+        $products = Product::latest()
+            ->filter(request(['search']))
+            ->paginate(12)
+            ->withQueryString();
+
         return view('products.index', compact('products'));
     }
 
+    // Menampilkan form tambah produk
     public function create()
     {
         return view('products.create');
     }
 
+    // Menyimpan produk baru
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required',
-            'stock' => 'required'
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'nullable',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'is_featured' => 'boolean',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        Product::create($request->all());
+        $validated['image'] = $request->file('image')->store('products', 'public');
+        Product::create($validated);
 
-        return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan!');
+        return redirect()->route('products.index')
+               ->with('success', 'Produk berhasil ditambahkan!');
     }
 
-    public function show(Product $product)
-    {
-        return view('products.show', compact('product'));
-    }
-
+    // Menampilkan form edit
     public function edit(Product $product)
     {
         return view('products.edit', compact('product'));
     }
 
+    // Update produk
     public function update(Request $request, Product $product)
     {
-        $product->update($request->all());
-        return redirect()->route('products.index')->with('success', 'Produk berhasil diupdate!');
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'nullable',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'is_featured' => 'boolean',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        if ($request->hasFile('image')) {
+            Storage::disk('public')->delete($product->image);
+            $validated['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        $product->update($validated);
+
+        return redirect()->route('products.index')
+               ->with('success', 'Produk berhasil diperbarui!');
     }
 
+    // Hapus produk
     public function destroy(Product $product)
     {
+        Storage::disk('public')->delete($product->image);
         $product->delete();
-        return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus!');
+
+        return redirect()->route('products.index')
+               ->with('success', 'Produk berhasil dihapus!');
     }
-
-
-    public function cart()
-    {
-        $cart = session()->get('cart', []);
-        return view('cart.index', compact('cart'));
-    }
-    
-    public function addToCart($id)
-    {
-        $product = Product::findOrFail($id);
-        $cart = session()->get('cart', []);
-    
-        if (isset($cart[$id])) {
-            $cart[$id]['quantity']++;
-        } else {
-            $cart[$id] = [
-                "name" => $product->name,
-                "quantity" => 1,
-                "price" => $product->price,
-            ];
-        }
-    
-        session()->put('cart', $cart);
-    
-        return redirect()->route('cart.index')->with('success', 'Produk berhasil ditambahkan ke keranjang!');
-    }
-
-
-
 }

@@ -13,10 +13,14 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('product_name');
-            $table->integer('quantity');
-            $table->integer('price');
-            $table->timestamps(); // created_at & updated_at
+            $table->foreignId('user_id')->constrained();
+            $table->json('product_details'); // Menyimpan array produk
+            $table->decimal('total_price', 12, 2);
+            $table->string('status')->default('pending');
+            $table->string('shipping_address');
+            $table->string('phone_number');
+            $table->string('payment_method');
+            $table->timestamps();
         });
     }
 

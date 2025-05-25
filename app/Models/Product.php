@@ -1,10 +1,46 @@
 <?php
 
+
+
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    //
+    use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'stock',
+        'image',
+        'is_featured'
+    ];
+
+    protected $casts = [
+        'is_featured' => 'boolean'
+    ];
+
+    // Accessor untuk URL gambar
+    public function getImageUrlAttribute()
+    {
+        return $this->image 
+            ? asset('storage/'.$this->image)
+            : asset('images/default-product.png');
+    }
+
+    // Accessor untuk harga format Rupiah
+    public function getFormattedPriceAttribute()
+    {
+        return 'Rp '.number_format($this->price, 0, ',', '.');
+    }
+
+    // Scope untuk produk unggulan
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', true);
+    }
 }
