@@ -50,6 +50,12 @@
                            class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-edit me-1"></i> Edit
                         </a>
+
+                        <a href="{{ route('orders.create', $product->id) }}" class="btn btn-success btn-sm">
+                            <i class="fas fa-shopping-cart me-1"></i> Order
+                        </a>
+
+
                         <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="delete-form">
                             @csrf
                             @method('DELETE')

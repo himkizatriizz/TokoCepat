@@ -43,4 +43,11 @@ class Product extends Model
     {
         return $query->where('is_featured', true);
     }
+
+    public function scopeFilter($query, array $filters)
+    {
+        if ($search = $filters['search'] ?? false) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+    }
 }
