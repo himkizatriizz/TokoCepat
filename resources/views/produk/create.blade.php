@@ -13,7 +13,16 @@
                     </h4>
                 </div>
                 <div class="card-body p-4">
-                    <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    <form action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="mb-4">
@@ -41,8 +50,9 @@
                         </div>
 
                         <div class="mb-4">
+                            <input type="hidden" name="is_featured" value="0">
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured">
+                                <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured" value="1">
                                 <label class="form-check-label" for="is_featured">Produk Unggulan</label>
                             </div>
                         </div>
@@ -54,7 +64,7 @@
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                            <a href="{{ route('products.index') }}" class="btn btn-outline-secondary me-md-2">
+                            <a href="{{ route('produk.index') }}" class="btn btn-outline-secondary me-md-2">
                                 <i class="fas fa-arrow-left me-1"></i> Kembali
                             </a>
                             <button type="submit" class="btn btn-primary">

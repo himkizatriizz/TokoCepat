@@ -7,9 +7,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class produk extends Model
 {
     use HasFactory;
+
+    protected $table = 'produk';
 
     protected $fillable = [
         'name',
@@ -29,7 +31,7 @@ class Product extends Model
     {
         return $this->image 
             ? asset('storage/'.$this->image)
-            : asset('images/default-product.png');
+            : asset('images/default-produk.png');
     }
 
     // Accessor untuk harga format Rupiah

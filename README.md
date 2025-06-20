@@ -27,7 +27,7 @@
 <body>
 
   <table border = '1'>
-    <caption>Tabel 1 - Products</caption>
+    <caption>Tabel 1 - Produk</caption>
     <thead>
       <tr>
         <th>Nama Field</th>

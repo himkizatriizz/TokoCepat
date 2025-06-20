@@ -66,8 +66,28 @@
             <a class="navbar-brand" href="/">
                 <i class="fas fa-store me-2"></i>TokoCepat
             </a>
-            <div class="d-flex">
-                <form class="d-flex me-3" action="{{ route('products.index') }}" method="GET">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url('/dashboard') }}">
+                            <i class="fas fa-home me-1"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ route('produk.index') }}">
+                            <i class="fas fa-box-open me-1"></i> Produk
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ route('orders.index') }}">
+                            <i class="fas fa-shopping-cart me-1"></i> Order
+                        </a>
+                    </li>
+                </ul>
+                <form class="d-flex ms-auto" action="{{ route('produk.index') }}" method="GET">
                     <div class="input-group">
                         <input type="text" name="search" class="form-control" placeholder="Cari produk..." value="{{ request('search') }}">
                         <button class="btn btn-light" type="submit">
@@ -75,9 +95,6 @@
                         </button>
                     </div>
                 </form>
-                <a href="{{ route('products.create') }}" class="btn btn-light">
-                    <i class="fas fa-plus me-1"></i> Tambah Produk
-                </a>
             </div>
         </div>
     </nav>

@@ -43,4 +43,30 @@ class AuthController extends Controller
         return redirect('/login')
             ->with('status', 'Anda telah logout');
     }
+
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|in:admin,staff,customer',
+        ]);
+
+        $user = \App\Models\User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role' => $request->role,
+        ]);
+
+        auth()->login($user);
+
+        return redirect('/dashboard')->with('success', 'Registrasi berhasil!');
+    }
 }

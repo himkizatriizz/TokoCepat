@@ -11,6 +11,8 @@ class Order extends Model
         'product_id',
         'quantity',
         'total_price',
+        'customer_name',
+        'customer_email',
     ];
 
     public function user()
@@ -20,7 +22,7 @@ class Order extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Produk::class);
     }
 }
 

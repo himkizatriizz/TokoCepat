@@ -19,7 +19,7 @@
                     <i class="fas fa-boxes me-2"></i>Daftar Produk
                 </h2>
                 <div>
-                    <a href="{{ route('products.create') }}" class="btn btn-primary">
+                    <a href="{{ route('produk.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus-circle me-1"></i> Tambah Produk
                     </a>
                 </div>
@@ -28,35 +28,35 @@
     </div>
 
     <div class="row">
-        @forelse($products as $product)
+        @forelse($produk as $item)
         <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-            <div class="card product-card h-100">
-                @if($product->is_featured)
+            <div class="card produk-card h-100">
+                @if($item->is_featured)
                 <div class="featured-badge">
                     <i class="fas fa-star me-1"></i> Unggulan
                 </div>
                 @endif
                 <div class="text-center p-3 bg-white">
-                    <img src="{{ $product->imageUrl }}" class="product-img" alt="{{ $product->name }}">
+                    <img src="{{ $item->imageUrl }}" class="product-img" alt="{{ $item->name }}">
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">{{ $product->name }}</h5>
-                    <p class="card-text text-primary fw-bold">{{ $product->formatted_price }}</p>
+                    <h5 class="card-title">{{ $item->name }}</h5>
+                    <p class="card-text text-primary fw-bold">{{ $item->formatted_price }}</p>
                     <p class="card-text text-muted small">
-                        <i class="fas fa-box-open me-1"></i> Stok: {{ $product->stock }}
+                        <i class="fas fa-box-open me-1"></i> Stok: {{ $item->stock }}
                     </p>
                     <div class="d-flex justify-content-between mt-3">
-                        <a href="{{ route('products.edit', $product->id) }}" 
+                        <a href="{{ route('produk.edit', $item->id) }}" 
                            class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-edit me-1"></i> Edit
                         </a>
 
-                        <a href="{{ route('orders.create', $product->id) }}" class="btn btn-success btn-sm">
+                        <a href="{{ route('orders.create', $item->id) }}" class="btn btn-success btn-sm">
                             <i class="fas fa-shopping-cart me-1"></i> Order
                         </a>
 
 
-                        <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="delete-form">
+                        <form action="{{ route('produk.destroy', $item->id) }}" method="POST" class="delete-form">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-outline-danger">
@@ -72,7 +72,7 @@
             <div class="alert alert-info text-center py-4">
                 <i class="fas fa-info-circle fa-2x mb-3"></i>
                 <h4>Belum ada produk tersedia</h4>
-                <a href="{{ route('products.create') }}" class="btn btn-primary mt-2">
+                <a href="{{ route('produk.create') }}" class="btn btn-primary mt-2">
                     <i class="fas fa-plus me-1"></i> Tambah Produk Pertama
                 </a>
             </div>
@@ -82,7 +82,7 @@
 
     <!-- Pagination -->
     <div class="d-flex justify-content-center mt-4">
-        {{ $products->links() }}
+        {{ $produk->links() }}
     </div>
 </div>
 
